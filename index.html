@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Valentine</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      text-align: center;
+      max-width: 380px;
+      width: 90%;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      color: #e63946;
+    }
+
+    p {
+      color: #444;
+      font-size: 16px;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
+    .buttons {
+      position: relative;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .yes {
+      background-color: #e63946;
+      color: white;
+    }
+
+    .no {
+      background-color: #f1f1f1;
+      color: #333;
+      position: absolute;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp 6s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-110vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- First Screen -->
+  <div class="card" id="questionCard">
+    <h1>Shakiba, তুমি কি আমার Valentine হবে?</h1>
+    <p>
+      তোমার হাসিতেই আমার দিনের শুরু,<br>
+      আর তোমার নামেই আমার সব শান্তি।
+    </p>
+
+    <div class="buttons">
+      <button class="yes" onclick="showLove()">Yes</button>
+      <button class="no" id="noBtn">No</button>
+    </div>
+  </div>
+
+  <!-- Second Screen -->
+  <div class="card hidden" id="loveCard">
+    <h1>শুধু তুমি ❤️</h1>
+    <p>
+      Shakiba,<br><br>
+      ভালোবাসা মানে শুধু একটা দিন না,<br>
+      ভালোবাসা মানে প্রতিটা সকাল তোমার পাশে জাগা,<br>
+      প্রতিটা রাত তোমার নাম নিয়ে ঘুমানো।<br><br>
+
+      তুমি আমার স্ত্রী,<br>
+      আমার সবচেয়ে নিরাপদ জায়গা,<br>
+      আমার জীবনের সবচেয়ে সুন্দর অধ্যায়।<br><br>
+
+      আজ Valentine’s Day,<br>
+      কিন্তু তোমার জন্য আমার ভালোবাসা<br>
+      কোনো দিনের মধ্যে সীমাবদ্ধ না।<br><br>
+
+      চিরদিন তোমার,<br>
+      <strong>— তোমার বেয়াদপ জামাইজান আকাশ ❤️</strong>
+    </p>
+  </div>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+    const music = document.getElementById("bgMusic");
+
+    noBtn.addEventListener("mouseenter", () => {
+      const x = Math.floor(Math.random() * 220) - 110;
+      const y = Math.floor(Math.random() * 120) - 60;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    function showLove() {
+      document.getElementById("questionCard").classList.add("hidden");
+      document.getElementById("loveCard").classList.remove("hidden");
+      music.play();
+      startHearts();
+    }
+
+    function startHearts() {
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 7000);
+      }, 500);
+    }
+  </script>
+
+</body>
+</html>
