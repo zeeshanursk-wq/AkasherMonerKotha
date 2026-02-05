@@ -1,179 +1,285 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Valentine</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Valentine 💖</title>
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      font-family: Arial, sans-serif;
-    }
+.card {
+  background: white;
+  padding: 30px 24px;
+  border-radius: 16px;
+  text-align: center;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.15);
+  position: relative;
+  z-index: 2;
+}
 
-    .card {
-      background: white;
-      padding: 40px 30px;
-      border-radius: 16px;
-      text-align: center;
-      max-width: 380px;
-      width: 90%;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-      z-index: 2;
-    }
+h1 { color: #e63946; }
+p { color: #444; line-height: 1.7; }
+button { padding: 12px 24px; border: none; border-radius: 25px; font-size: 16px; cursor: pointer; }
+.yes { background: #e63946; color: white; }
+.no { background: #f1f1f1; position: absolute; left: 50%; top: 0; transform: translateX(-50%); }
+.hidden { display: none; }
 
-    h1 {
-      margin-bottom: 12px;
-      color: #e63946;
-    }
+/* Floating hearts */
+.heart { position: absolute; bottom: -20px; font-size: 18px; animation: floatUp 6s linear infinite; pointer-events: none; }
+@keyframes floatUp { from { transform: translateY(0); opacity: .8; } to { transform: translateY(-110vh); opacity: 0; } }
 
-    p {
-      color: #444;
-      font-size: 16px;
-      margin-bottom: 28px;
-      line-height: 1.7;
-    }
+/* Heartbeat */
+.heartbeat { display: inline-block; animation: beat 1s infinite; }
+@keyframes beat { 0%,100%{transform:scale(1);} 50%{transform:scale(1.4);} }
 
-    .buttons {
-      position: relative;
-      height: 60px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-    }
+/* Animated text */
+.animated-text { display: inline-block; animation: fadeIn 2s ease forwards; opacity: 0; }
+@keyframes fadeIn { to { opacity: 1; } }
 
-    button {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 25px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
+/* Promise Page Glow */
+.glow { color: #e63946; text-shadow: 0 0 5px #ff9a9e,0 0 10px #ffb3c6,0 0 15px #fad0c4; animation: glowAnim 2s infinite alternate; }
+@keyframes glowAnim { 0% {text-shadow: 0 0 5px #ff9a9e,0 0 10px #ffb3c6,0 0 15px #fad0c4;} 100% {text-shadow: 0 0 15px #ff9a9e,0 0 20px #ffb3c6,0 0 25px #fad0c4;} }
 
-    button:hover {
-      transform: scale(1.05);
-    }
+/* Proposal Slider */
+.proposal { position: fixed; inset:0; background: rgba(0,0,0,.8); display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:0; pointer-events:none; transition: opacity 1s; z-index:10; }
+.proposal.show { opacity:1; pointer-events:auto; }
+.proposal img { width: 85%; max-width:340px; border-radius:16px; position:absolute; opacity:0; transition: opacity 1s; }
+.proposal img.active { opacity:1; }
+.proposal h2 { color:white; margin-top:15px; z-index:5; }
 
-    .yes {
-      background-color: #e63946;
-      color: white;
-    }
-
-    .no {
-      background-color: #f1f1f1;
-      color: #333;
-      position: absolute;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .heart {
-      position: absolute;
-      bottom: -20px;
-      font-size: 20px;
-      animation: floatUp 6s linear infinite;
-      opacity: 0.7;
-    }
-
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0);
-        opacity: 0.8;
-      }
-      100% {
-        transform: translateY(-110vh);
-        opacity: 0;
-      }
-    }
-  </style>
+/* Next buttons */
+.next-btn { margin-top:20px; background:#e63946; color:white; }
+</style>
 </head>
-
 <body>
 
-  <!-- First Screen -->
-  <div class="card" id="questionCard">
-    <h1>Shakiba, তুমি কি আমার Valentine হবে?</h1>
-    <p>
-      তোমার হাসিতেই আমার দিনের শুরু,<br>
-      আর তোমার নামেই আমার সব শান্তি।
-    </p>
+<!-- Question -->
+<div class="card" id="questionCard">
+  <h1>Shakiba, তুমি কি আমার Valentine হবে?</h1>
+  <p>তোমার হাসিতেই আমার দিনের শুরু ❤️</p>
+  <button class="yes">Yes</button>
+  <button class="no" id="noBtn">No</button>
+</div>
 
-    <div class="buttons">
-      <button class="yes" onclick="showLove()">Yes</button>
-      <button class="no" id="noBtn">No</button>
-    </div>
-  </div>
+<!-- Happy Page -->
+<div class="card hidden" id="happyCard">
+  <h1 class="animated-text">Yay! My MohaRaani Said <span class="heartbeat">YES ❤️</span></h1>
+  <p class="animated-text" id="happyText"></p>
+  <button class="next-btn hidden" id="toLoveBtn">Next ➡️</button>
+</div>
 
-  <!-- Second Screen -->
-  <div class="card hidden" id="loveCard">
-    <h1>শুধু তুমি ❤️</h1>
-    <p>
-      Shakiba,<br><br>
-      ভালোবাসা মানে শুধু একটা দিন না,<br>
-      ভালোবাসা মানে প্রতিটা সকাল তোমার পাশে জাগা,<br>
-      প্রতিটা রাত তোমার নাম নিয়ে ঘুমানো।<br><br>
+<!-- Love Note Page -->
+<div class="card hidden" id="loveCard">
+  <h1>শুধু তুমি 💖</h1>
+  <p id="typeText"></p>
+  <button class="next-btn hidden" id="toPromiseBtn">Next ➡️</button>
+</div>
 
-      তুমি আমার স্ত্রী,<br>
-      আমার সবচেয়ে নিরাপদ জায়গা,<br>
-      আমার জীবনের সবচেয়ে সুন্দর অধ্যায়।<br><br>
+<!-- Promise Page -->
+<div class="card hidden" id="promiseCard">
+  <h1 class="glow">আমার প্রতিশ্রুতি 💌</h1>
+  <p class="glow">
+আমি প্রতিদিন তোমার চোখের দিকে তাকিয়ে বলব, তুমি আমার জীবনের সবচেয়ে বড় সুখ।<br><br>
+তোমার হাসি আমার পৃথিবীর সবচেয়ে সুন্দর সুর। আমি চিরকাল সেটা রক্ষা করব।<br><br>
+আমি তোমার স্বপ্নগুলোকে সত্যি করার জন্য সর্বদা তোমার পাশে থাকব।<br><br>
+আমি তোমার ভালোবাসাকে কখনোই কমতে দেব না, বরং প্রতিদিন বাড়াব।<br><br>
+আমি তোমাকে ভালোবেসে যাব—<br>
+পাগলের মতো, শেষ নিঃশ্বাস পর্যন্ত।<br><br>
+এই জন্মেও, এই জীবনেও,<br>
+শুধু তোমার নাম লিখে দিলাম আমার হৃদয়ে, আমার জান।<br><br>
+অনুগ্রহ করে, তুমি পুরোপুরি,<br>
+শুধু, শুধু, শুধু, শুধু আমার হয়ে থাকো—<br>
+চিরদিন, অন্তহীন ভালোবাসায় ❤️
+  </p>
+  <button class="next-btn" id="toProposalBtn">Next ➡️</button>
+</div>
 
-      আজ Valentine’s Day,<br>
-      কিন্তু তোমার জন্য আমার ভালোবাসা<br>
-      কোনো দিনের মধ্যে সীমাবদ্ধ না।<br><br>
+<!-- Proposal Slider -->
+<div class="proposal" id="proposal">
+  <img src="proposal1.jpg" class="active">
+  <img src="proposal2.jpg">
+  <img src="proposal3.jpg">
+  <h2>Will you marry me? 💍</h2>
+</div>
 
-      চিরদিন তোমার,<br>
-      <strong>— তোমার বেয়াদপ জামাইজান আকাশ ❤️</strong>
-    </p>
-  </div>
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/audio/2023/02/22/audio_f447ca3d7d.mp3">
+</audio>
 
-  <!-- Background Music -->
-  <audio id="bgMusic" loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-  </audio>
+<script>
+const questionCard = document.getElementById("questionCard");
+const noBtn = document.getElementById("noBtn");
+const happyCard = document.getElementById("happyCard");
+const loveCard = document.getElementById("loveCard");
+const promiseCard = document.getElementById("promiseCard");
+const proposal = document.getElementById("proposal");
+const happyText = document.getElementById("happyText");
+const toLoveBtn = document.getElementById("toLoveBtn");
+const toPromiseBtn = document.getElementById("toPromiseBtn");
+const toProposalBtn = document.getElementById("toProposalBtn");
+const textEl = document.getElementById("typeText");
+const music = document.getElementById("bgMusic");
 
-  <script>
-    const noBtn = document.getElementById("noBtn");
-    const music = document.getElementById("bgMusic");
+let currentPage = questionCard;
 
-    noBtn.addEventListener("mouseenter", () => {
-      const x = Math.floor(Math.random() * 220) - 110;
-      const y = Math.floor(Math.random() * 120) - 60;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    });
+/* No button movement */
+function moveNoButton() {
+  const cardRect = questionCard.getBoundingClientRect();
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
+  const maxX = cardRect.width - btnWidth - 10; 
+  const maxY = cardRect.height - btnHeight - 10;
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
+}
+noBtn.addEventListener("mouseenter", moveNoButton);
+noBtn.addEventListener("touchstart", moveNoButton);
 
-    function showLove() {
-      document.getElementById("questionCard").classList.add("hidden");
-      document.getElementById("loveCard").classList.remove("hidden");
-      music.play();
-      startHearts();
+/* Button Clicks */
+document.querySelector(".yes").addEventListener("click", showHappy);
+toLoveBtn.addEventListener("click", showLoveNote);
+toPromiseBtn.addEventListener("click", showPromise);
+toProposalBtn.addEventListener("click", showProposal);
+
+/* Happy Page */
+function showHappy(){
+  questionCard.classList.add("hidden");
+  happyCard.classList.remove("hidden");
+  currentPage = happyCard;
+  music.volume = 0.5;
+  music.play();
+  const happyMessage = `Every moment with you feels like a beautiful dream I never want to wake up from,
+You are not just my love, you are my home, my peace, and my happiness all at once,
+No words can truly capture how much you mean to me, but I promise to spend my life showing you,
+Thank you for being my Wife, my Love & my Best Friend..`;
+  happyText.innerHTML = "";
+  let i=0;
+  function typeHappy() {
+    if(i<happyMessage.length){
+      const char = happyMessage[i];
+      happyText.innerHTML += (char===',') ? '<br>' : char;
+      i++;
+      setTimeout(typeHappy,30);
+    } else { toLoveBtn.classList.remove("hidden"); }
+  }
+  typeHappy();
+}
+
+/* Love Note Page */
+const loveMessage = `ভালোবাসা মানে শুধু একটা দিন না,
+ভালোবাসা মানে প্রতিটা সকাল তোমার পাশে জাগা,
+প্রতিটা রাত তোমার নাম নিয়ে ঘুমানো।\n
+তুমি আমার স্ত্রী,
+আমার সবচেয়ে নিরাপদ জায়গা,
+আমার জীবনের সবচেয়ে সুন্দর অধ্যায়।\n
+আজ Valentine’s Day,
+কিন্তু তোমার জন্য আমার ভালোবাসা
+কোনো দিনের মধ্যে সীমাবদ্ধ না।\n
+চিরদিন তোমার,
+— তোমার বেয়াদপ জামাইজান আকাশ ❤️`;
+
+let j=0;
+function showLoveNote(){
+  happyCard.classList.add("hidden");
+  loveCard.classList.remove("hidden");
+  currentPage = loveCard;
+  textEl.innerHTML = "";
+  j=0;
+  typeWriter();
+  startHearts();
+}
+
+function typeWriter(){
+  if(j<loveMessage.length){
+    const char = loveMessage[j];
+    if(char === '\n') textEl.innerHTML += '<br>';
+    else if(char==='❤️') textEl.innerHTML += `<span class="heartbeat">❤️</span>`;
+    else textEl.innerHTML += char;
+    j++;
+    setTimeout(typeWriter,35);
+  } else { toPromiseBtn.classList.remove("hidden"); }
+}
+
+/* Floating Hearts */
+function startHearts(){
+  setInterval(()=>{
+    const h = document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=Math.random()*100+"vw";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },500);
+}
+
+/* Promise Page */
+function showPromise(){
+  loveCard.classList.add("hidden");
+  happyCard.classList.add("hidden");
+  promiseCard.classList.remove("hidden");
+  currentPage = promiseCard;
+}
+
+/* Proposal Page */
+let proposalIndex=0;
+const proposalImgs = proposal.querySelectorAll('img');
+function showProposal(){
+  loveCard.classList.add("hidden");
+  promiseCard.classList.add("hidden");
+  proposal.classList.add("show");
+  currentPage = proposal;
+  proposalImgs.forEach((img,i)=> img.classList.remove('active'));
+  proposalIndex = 0;
+  proposalImgs[proposalIndex].classList.add('active');
+  startProposalSlider();
+}
+
+function startProposalSlider(){
+  setInterval(()=>{
+    proposalImgs.forEach(img=>img.classList.remove('active'));
+    proposalIndex = (proposalIndex+1) % proposalImgs.length;
+    proposalImgs[proposalIndex].classList.add('active');
+  }, 3000);
+}
+
+/* Heartbeat synced to music */
+function syncHeartbeatToMusic() {
+  const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  const analyser = audioCtx.createAnalyser();
+  const source = audioCtx.createMediaElementSource(music);
+  source.connect(analyser);
+  analyser.connect(audioCtx.destination);
+  analyser.fftSize = 256;
+  const dataArray = new Uint8Array(analyser.frequencyBinCount);
+  function detectBeat(){
+    analyser.getByteFrequencyData(dataArray);
+    let sum = 0;
+    dataArray.forEach(v => sum+=v);
+    let avg = sum/dataArray.length;
+    if(avg>120){
+      document.querySelectorAll('.heartbeat').forEach(el=>{
+        el.style.animation='beat 0.35s ease forwards';
+        setTimeout(()=>el.style.animation='beat 1s infinite',350);
+      });
     }
-
-    function startHearts() {
-      setInterval(() => {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerText = "❤️";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
-        document.body.appendChild(heart);
-
-        setTimeout(() => {
-          heart.remove();
-        }, 7000);
-      }, 500);
-    }
-  </script>
-
+    requestAnimationFrame(detectBeat);
+  }
+  detectBeat();
+}
+music.addEventListener('play', () => { syncHeartbeatToMusic(); });
+</script>
 </body>
 </html>
